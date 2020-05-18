@@ -24,26 +24,33 @@ def msgbox_focus(event):
 
 
 def send_message(event):
+    # TODO: do not delete message if you click again in message box while writing
     global line
     msg = msg_box.get()
     if msg not in ['', 'Enter to send message', ' ']:
         msg_box.delete(0, END)
-        Label(chat_frame, text=f"{msg.split('. ')[0]}: ", relief=SUNKEN).grid(row=line, column=0, sticky=E)
-        Label(chat_frame, text=msg.split('. ')[1]).grid(row=line, column=1, sticky=W)
+        Label(user_frame, text=f"{msg.split('. ')[0]}:", bg='black', fg='white', relief=SUNKEN).grid(row=line, column=0, sticky=E, padx=2, pady=2)
+        Label(msg_frame, text=msg.split('. ')[1], bg='black', fg='white', relief=SUNKEN).grid(row=line, column=0, sticky=W, padx=2, pady=2)
         line += 1
 
 
-buttons_frame = LabelFrame(root)
+buttons_frame = Frame(root)
 buttons_frame.grid(row=0, column=0, sticky=NSEW, padx=2, pady=2)
 button = Button(buttons_frame, text="Adios")
 button.pack(fill=BOTH)
 
 
-chat_frame = LabelFrame(root)
+chat_frame = Frame(root, bg='red')
 chat_frame.grid(row=1, column=0, sticky=NSEW, padx=2, pady=2)
 
+user_frame = Frame(chat_frame, bg='green', width=70, height=482)
+user_frame.grid(row=0, column=0, sticky=EW, padx=2, pady=2)
 
-msgbox_frame = LabelFrame(root)
+msg_frame = Frame(chat_frame, bg='green', width=268, height=482)
+msg_frame.grid(row=0, column=1, sticky=EW, padx=2, pady=2)
+
+
+msgbox_frame = Frame(root)
 msgbox_frame.grid(row=2, column=0, sticky=NSEW, padx=2, pady=2)
 msg_box = Entry(msgbox_frame, bd=3)
 msg_box.pack(expand=1, fill=BOTH, padx=2, pady=2)
@@ -57,9 +64,11 @@ root.grid_columnconfigure(0, weight=1)
 root.grid_rowconfigure(0, weight=1)
 root.grid_rowconfigure(1, weight=200)
 root.grid_rowconfigure(2, weight=1)
+user_frame.grid_columnconfigure(0, weight=1)
+msg_frame.grid_columnconfigure(0, weight=2)
 
-chat_frame.grid_columnconfigure(0, weight=1)
-chat_frame.grid_columnconfigure(1, weight=4)
+user_frame.grid_propagate(False)
+msg_frame.grid_propagate(False)
 
 
 root.mainloop()
