@@ -1,15 +1,16 @@
 from tkinter import *
 
-PHI = (1+5**0.5)/2
+PHI = (1 + 5**0.5) / 2
 
 
 root = Tk()
 root.title("Chaty Chat")
 WIDTH = int(350)
-HEIGHT = int(350*PHI)
+HEIGHT = int(350 * PHI)
 root.geometry(f"{WIDTH}x{HEIGHT}")
 
 line = 0
+username = 'Bert'
 
 
 def msgbox_focus(event):
@@ -27,7 +28,8 @@ def send_message(event):
     msg = msg_box.get()
     if msg not in ['', 'Enter to send message', ' ']:
         msg_box.delete(0, END)
-        Label(chat_frame, text=msg).grid(row=line, column=0, sticky=W)
+        Label(chat_frame, text=f"{msg.split('. ')[0]}: ", relief=SUNKEN).grid(row=line, column=0, sticky=E)
+        Label(chat_frame, text=msg.split('. ')[1]).grid(row=line, column=1, sticky=W)
         line += 1
 
 
@@ -55,6 +57,9 @@ root.grid_columnconfigure(0, weight=1)
 root.grid_rowconfigure(0, weight=1)
 root.grid_rowconfigure(1, weight=200)
 root.grid_rowconfigure(2, weight=1)
+
+chat_frame.grid_columnconfigure(0, weight=1)
+chat_frame.grid_columnconfigure(1, weight=4)
 
 
 root.mainloop()
