@@ -15,6 +15,7 @@ def msgbox_focus(event):
     elif event.widget != root.nametowidget(msg_box):
         msg_box.delete(0, END)
         msg_box.insert(0, "Enter to send message")
+        root.focus()
     return None
 
 
