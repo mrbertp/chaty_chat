@@ -9,7 +9,10 @@ WIDTH = int(350)
 HEIGHT = int(350 * PHI)
 root.geometry(f"{WIDTH}x{HEIGHT}")
 
-line = 0
+messages = []
+max_line = 25
+lines = list(range(max_line))
+
 nonvalid_message = ['', 'Enter to send message', ' ']
 user_name = 'Bert'
 
@@ -23,37 +26,51 @@ def msgbox_focus(event):
             msg_box.delete(0, END)
             msg_box.insert(0, 'Enter to send message')
             root.focus()
-    return None
 
 
 def send_message(event):
-    global line
+    global messages
+    global nonvalid_message
     msg = msg_box.get()
     if msg not in nonvalid_message:
         msg_box.delete(0, END)
-        user_text = Label(user_frame, text=line, bg='black', fg='white').grid(row=line, column=0, sticky=E)
-        msg_text = Label(msg_frame, text=msg, bg='black', fg='white').grid(row=line, column=0, sticky=W)
-        line += 1
-        #print('chat_frame: ' + str(chat_frame.winfo_height()))
-        #print('msg_text: ' + str(msg_text.winfo_height()))
+        messages.append(msg)
+        line = zip(lines, messages)
+        if len(messages) > max_line:
+            print('límite alcanzado')
+            messages.pop(0)
+        for f in [user_frame, msg_frame]:
+            for c in f.winfo_children():
+                c.destroy()
+        for l, m in line:
+            user_text = Label(user_frame, text=l,
+                              bg='black', fg='white', font=("Consolas", 9))
+            user_text.grid(row=l, column=0, sticky=E)
+            msg_text = Label(msg_frame, text=m,
+                             bg='black', fg='white', font=("Consolas", 9))
+            msg_text.grid(row=l, column=0, sticky=W)
 
 
+# BUTTONS FRAME
 buttons_frame = Frame(root)
 buttons_frame.grid(row=0, column=0, sticky=NSEW, padx=2, pady=2)
 button = Button(buttons_frame, text="Adios")
 button.pack(fill=BOTH)
 
+# CHAT FRAME
 
 chat_frame = Frame(root, bg='black')
 chat_frame.grid(row=1, column=0, sticky=NSEW, padx=2, pady=2)
 
-user_frame = Frame(chat_frame, bg='black', width=70, height=482)
-user_frame.grid(row=0, column=0, sticky=EW)
 
-msg_frame = Frame(chat_frame, bg='black', width=268, height=482)
-msg_frame.grid(row=0, column=1, sticky=EW)
+user_frame = Frame(chat_frame, bg='green', width=70, height=500)
+user_frame.grid(row=0, column=0, sticky=NS)
+
+msg_frame = Frame(chat_frame, bg='blue', width=276, height=500)
+msg_frame.grid(row=0, column=1, sticky=NS)
 
 
+# MESSAGE BOX
 msgbox_frame = Frame(root)
 msgbox_frame.grid(row=2, column=0, sticky=NSEW, padx=2, pady=2)
 msg_box = Entry(msgbox_frame, bd=3)
@@ -74,5 +91,7 @@ msg_frame.grid_columnconfigure(0, weight=2)
 user_frame.grid_propagate(False)
 msg_frame.grid_propagate(False)
 
+root.update()
+chat_height = chat_frame.winfo_height()
 
 root.mainloop()
